@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "jsonioworker.h"
+#include "planthierarhy.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,5 +19,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    jsonIOworker* IOworker;
+    PlantHierarhy* hierarhyModel;
 };
 #endif // MAINWINDOW_H
