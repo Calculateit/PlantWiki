@@ -17,11 +17,9 @@ void HierItem::appendChild(HierItem *item){
 
 void HierItem::addChild(int row, HierItem* item){
     if(row >= 0){
-        if(!item){
-            item = new HierItem({});
-            m_childItems.insert(row, item);
-            item->m_parentItem = this;
-        }
+        if(!item) item = new HierItem({});
+        m_childItems.insert(row, item);
+        item->m_parentItem = this;
     }
 }
 
@@ -47,7 +45,6 @@ bool HierItem::removeColumn(int column){
 }
 
 HierItem* HierItem::child(int row){
-    //qDebug()<<"row= "<<row<<"elem_amount= "<<m_childItems.size();
     if (row < 0 || row >= m_childItems.size())
         return nullptr;
 

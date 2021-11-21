@@ -22,13 +22,11 @@ public:
     bool loadDataFromFile(PlantHierarhy* root = nullptr);
     bool write();
 
-signals:
-    void sendDataToView(const QVector<QVariant>& elem_data);
-
 private:
     bool readFile();
     void parseAndPlaceData();
     void parseArray(const QJsonArray& jsonArray, const QModelIndex &parent_index);
+
     QWidget* parent_window;
     QString path;
     QJsonDocument jDoc;

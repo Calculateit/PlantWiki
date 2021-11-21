@@ -11,21 +11,22 @@ class PlantHierarhy : public QAbstractItemModel
 
 public:
     explicit PlantHierarhy(QObject *parent = nullptr);
-    virtual ~PlantHierarhy(){ delete rootItem; }
+    virtual ~PlantHierarhy() { delete rootItem; }
 
     // Header:
     //QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     //bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole) override;
-    void appendRootChildren(const QVector<QVariant>& data);
+
     // Basic functionality:
     QModelIndex index(int row, int column,
                       const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &index) const override;
+    QModelIndex sibling(int row, int column, const QModelIndex &index) const override;
 
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    int rowCount(const QModelIndex &index = QModelIndex()) const override;
+    int columnCount(const QModelIndex &index = QModelIndex()) const override;
 
 //    // Fetch data dynamically:
 //    bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
@@ -44,16 +45,19 @@ public:
     // Add data:
     bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
     bool insertColumns(int column, int count, const QModelIndex &parent = QModelIndex()) override;
-    void test();
+
     QModelIndex addIndex(int row, int column, const QModelIndex &parent) const;
+    QModelIndex getRootIndex() const { return rootIndex; }
 
     // Remove data:
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
     bool removeColumns(int column, int count, const QModelIndex &parent = QModelIndex()) override;
 
-    QModelIndex getRootIndex() const { return rootIndex; }
-private slots:
-    void setDataToView(const QVector<QVariant>& elem_data, const int level);
+    QVector<QModelIndex*> getFullData(const QModelIndex &index) const;
+
+    void test();
+
+    HierItem *getRootItem() const;
 
 private:
     HierItem *rootItem;

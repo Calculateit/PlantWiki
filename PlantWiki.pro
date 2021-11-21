@@ -9,17 +9,21 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    elementview.cpp \
     hieritem.cpp \
     jsonioworker.cpp \
     main.cpp \
     mainwindow.cpp \
-    planthierarhy.cpp
+    planthierarhy.cpp \
+    proxymodel.cpp
 
 HEADERS += \
+    elementview.h \
     hieritem.h \
     jsonioworker.h \
     mainwindow.h \
-    planthierarhy.h
+    planthierarhy.h \
+    proxymodel.h
 
 FORMS += \
     mainwindow.ui

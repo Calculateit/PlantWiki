@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include "jsonioworker.h"
 #include "planthierarhy.h"
+#include "proxymodel.h"
+#include "elementview.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -18,8 +20,12 @@ public:
     ~MainWindow();
 
 private:
+    void showElement(const QModelIndex& index) const;
+
     Ui::MainWindow *ui;
     jsonIOworker* IOworker;
     PlantHierarhy* hierarhyModel;
+    proxyModel* proxytreeModel;
+    ElementView* elemView;
 };
 #endif // MAINWINDOW_H

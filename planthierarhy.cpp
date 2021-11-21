@@ -5,23 +5,7 @@ PlantHierarhy::PlantHierarhy(QObject *parent)
 {
     rootItem = new HierItem({"Hier name", "Name", "Description", "Image path"});
     rootIndex = createIndex(0, 0, rootItem);
-    //createIndex(0, 0, QModelIndex());
     emit dataChanged(rootIndex, rootIndex, QVector<int>() << Qt::EditRole);
-    //setupModelData(data.split('\n'), rootItem);
-}
-
-void PlantHierarhy::setDataToView(const QVector<QVariant>& data, const int level){
-    HierItem* parentItem = rootItem;
-    if(!level)
-        rootItem->appendChild(new HierItem(data));
-    else
-        while(level){
-            createIndex(parentItem->row(), 0, parentItem);
-        }
-}
-
-void PlantHierarhy::appendRootChildren(const QVector<QVariant>& data){
-    rootItem->appendChild(new HierItem(data));
 }
 
 QModelIndex PlantHierarhy::index(int row, int column, const QModelIndex &parent) const
@@ -39,6 +23,16 @@ QModelIndex PlantHierarhy::index(int row, int column, const QModelIndex &parent)
     if (childItem)
         return createIndex(row, column, childItem);
     return QModelIndex();
+}
+
+QModelIndex PlantHierarhy::sibling(int row, int column, const QModelIndex &index) const
+{
+    if (!index.isValid() || index.column()< 0 || index.column() > columnCount(index) ||
+        index.row()<0 || index.row() > rowCount(index))
+        return QModelIndex();
+
+    HierItem* indexItem = static_cast<HierItem*>(index.internalPointer());
+    return createIndex(row, column, indexItem);
 }
 
 QModelIndex PlantHierarhy::addIndex(int row, int column, const QModelIndex &parent) const
@@ -64,37 +58,36 @@ QModelIndex PlantHierarhy::parent(const QModelIndex &index) const
 {
     if (!index.isValid())
         return QModelIndex();
+
     HierItem *childItem = static_cast<HierItem*>(index.internalPointer());
     HierItem *parentItem = childItem->parentItem();
 
-    if (parentItem == nullptr){
-        //qDebug()<<"ERROR parent()";
+    if (parentItem == nullptr)
         return QModelIndex();
-    }
+
     if(parentItem == rootItem)
         return rootIndex;
 
     return createIndex(parentItem->row(), 0, parentItem);
 }
 
-int PlantHierarhy::rowCount(const QModelIndex &parent) const
+int PlantHierarhy::rowCount(const QModelIndex &index) const
 {
-    HierItem *parentItem;
-    if (parent.column() > 0)
-        return 0;
+    qDebug()<<"vsddddddddddddddddddddd rowCount";
+    HierItem *indexItem;
 
-    if (!parent.isValid())
-        parentItem = rootItem;
+    if (!index.isValid())
+        indexItem = rootItem;
     else
-        parentItem = static_cast<HierItem*>(parent.internalPointer());
+        indexItem = static_cast<HierItem*>(index.internalPointer());
 
-    return parentItem->childCount();
+    return indexItem->childCount();
 }
 
-int PlantHierarhy::columnCount(const QModelIndex &parent) const
+int PlantHierarhy::columnCount(const QModelIndex &index) const
 {
-    if (parent.isValid())
-        return static_cast<HierItem*>(parent.internalPointer())->columnCount();
+    if (index.isValid())
+        return static_cast<HierItem*>(index.internalPointer())->columnCount();
     return rootItem->columnCount();
 }
 
@@ -107,7 +100,6 @@ QVariant PlantHierarhy::data(const QModelIndex &index, int role) const
         return QVariant();
 
     HierItem *item = static_cast<HierItem*>(index.internalPointer());
-    //qDebug()<<"get_data "<<item<<" row= "<<index.row()<<" column= "<<index.column()<<" meaning:"<<item->data(index.column());
     if(item)
         return item->data(index.column());
     return QVariant();
@@ -117,14 +109,12 @@ bool PlantHierarhy::setData(const QModelIndex &index, const QVariant &value, int
 {
     if (role==Qt::EditRole && index.isValid() && data(index, role) != value) {
         HierItem *item = static_cast<HierItem*>(index.internalPointer());
-        //qDebug()<<"inside setData() "<<item;
+
         if(item->setData(index.column(), value)){
-            //qDebug()<<"data_changed";
             emit dataChanged(index, index, QVector<int>() << role);
             return true;
         }
     }
-    //qDebug()<<"CRITICAL data_NOT_changed";
     return false;
 }
 
@@ -203,6 +193,11 @@ void PlantHierarhy::test(){
                 qDebug()<<vertex->data(j).toString()<<" ";
         }
     }
+}
+
+HierItem *PlantHierarhy::getRootItem() const
+{
+    return rootItem;
 }
 ////QVariant PlantHierarhy::headerData(int section, Qt::Orientation orientation, int role) const
 //{
