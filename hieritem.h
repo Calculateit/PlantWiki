@@ -3,6 +3,11 @@
 
 #include <QVariant>
 
+/*
+ * Class of a hierarhy tree item. Every child includes
+ * root pointer, massive of childs pointers and finally its own data.
+ */
+
 class HierItem
 {
 public:

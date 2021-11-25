@@ -47,19 +47,18 @@ bool HierItem::removeColumn(int column){
 HierItem* HierItem::child(int row){
     if (row < 0 || row >= m_childItems.size())
         return nullptr;
-
     return m_childItems.at(row);
 }
 
-int HierItem::childCount() const{
+int HierItem::childCount() const {
     return m_childItems.count();
 }
 
-int HierItem::columnCount() const{
+int HierItem::columnCount() const {
     return m_itemData.count();
 }
 
-QVariant HierItem::data(int column) const{
+QVariant HierItem::data(int column) const {
     if (column < 0 || column >= m_itemData.size())
         return QVariant();
     return m_itemData.at(column);
@@ -79,10 +78,9 @@ bool HierItem::setData(int column, const QVariant& value){
     return true;
 }
 
-int HierItem::row() const{
+int HierItem::row() const {
     if (m_parentItem)
         return m_parentItem->m_childItems.indexOf(const_cast<HierItem*>(this));
-
     return 0;
 }
 

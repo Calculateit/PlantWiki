@@ -18,6 +18,7 @@ SOURCES += \
     proxymodel.cpp
 
 HEADERS += \
+    constants.h \
     elementview.h \
     hieritem.h \
     jsonioworker.h \

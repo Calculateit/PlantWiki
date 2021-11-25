@@ -5,6 +5,13 @@
 
 #include <QAbstractItemModel>
 
+/*
+ * A model class. Responsible for the right data deployment in the memory.
+ *  The atomary element is HierItem (i.e. a tree vertex pointer). The class
+ *  provides a useful and essential interface for views in Qt and further
+ *  working with data.
+ */
+
 class PlantHierarhy : public QAbstractItemModel
 {
     Q_OBJECT
@@ -14,9 +21,7 @@ public:
     virtual ~PlantHierarhy() { delete rootItem; }
 
     // Header:
-    //QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
-
-    //bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole) override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     // Basic functionality:
     QModelIndex index(int row, int column,
@@ -27,12 +32,6 @@ public:
 
     int rowCount(const QModelIndex &index = QModelIndex()) const override;
     int columnCount(const QModelIndex &index = QModelIndex()) const override;
-
-//    // Fetch data dynamically:
-//    bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
-
-//    bool canFetchMore(const QModelIndex &parent) const override;
-//    void fetchMore(const QModelIndex &parent) override;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
@@ -55,9 +54,7 @@ public:
 
     QVector<QModelIndex*> getFullData(const QModelIndex &index) const;
 
-    void test();
-
-    HierItem *getRootItem() const;
+    HierItem *getRootItem() const { return rootItem; }
 
 private:
     HierItem *rootItem;

@@ -1,21 +1,23 @@
 #include "elementview.h"
 
-ElementView::ElementView(QAbstractItemModel& model, QLabel* image_label, QLabel* decription_label)
+ElementView::ElementView(QAbstractItemModel& model, QLabel* image_label, QLabel* description_label)
     : model(model)
 {
     labels.insert("image", image_label);
-    labels.insert("description", decription_label);
+    labels.insert("description", description_label);
 }
 
-void ElementView::updateImage(){                                    //CHANGE!!!
-    if(0==1){
-        QString path = imagePath.data().toString();
-        QPixmap pic(path);
-        labels["image"]->setPixmap(pic);
+void ElementView::updateImage(){
+    QString path = imagePath.data().toString();
+    QPixmap pic(path), adaptedPic;
+    if(!pic.isNull()){
+        if(pic.height() > constants::ELEMENT_IMAGE_HEIGHT){
+            adaptedPic = pic.scaledToHeight(constants::ELEMENT_IMAGE_HEIGHT);
+        }
+        else
+            adaptedPic = pic;
+        labels["image"]->setPixmap(adaptedPic);
     }
-    //
-        labels["image"]->setText(imagePath.data().toString());
-    //
 }
 
 void ElementView::updateDescription(){
@@ -23,18 +25,24 @@ void ElementView::updateDescription(){
     labels["description"]->setText(new_description);
 }
 
-void ElementView::updateElementView(const QModelIndex& image_index, const QModelIndex& decription_index){
-    qDebug()<<image_index;
-    if(image_index.column() == 2){//QModelIndex& image_index, QModelIndex& decription_index
+void ElementView::updateElementView(const QModelIndex& image_index, const QModelIndex& description_index){
+
+    if(description_index.column() == constants::DESCRIPTION_COLUMN_INDEX){
+        description = description_index;
+        updateDescription();
+    }
+    if(image_index.column()  == constants::IMAGE_COLUMN_INDEX){
         imagePath = image_index;
         updateImage();
     }
-    if(decription_index.column() == 3){
-        description = decription_index;
-        updateDescription();
-    }
 }
 
-void ElementView::testSlot(const QModelIndex& index){
-    qDebug()<<index;
+void ElementView::setNewImage(const QString& newPath){
+    model.setData(imagePath, newPath);
+    updateImage();
+}
+
+void ElementView::setNewDescription(const QString& newDescription){
+    model.setData(description, newDescription);
+    updateDescription();
 }

@@ -3,27 +3,27 @@
 
 #include <QIdentityProxyModel>
 
-#include "hieritem.h"
+#include "constants.h"
 
-enum ViewType{
-    tree,
-    list
-};
+#include "hieritem.h"
+#include "planthierarhy.h"
+
+/*
+ * Provides a shell between Planthierarhy original model
+ * and QTreeView, where we don`t want to show all information
+ * from the source.
+ */
 
 class proxyModel : public QIdentityProxyModel
 {
     Q_OBJECT
 
 public:
-    QVariant data(const QModelIndex &index, int role) const override;
+    proxyModel() {};
     int columnCount(const QModelIndex &parent) const override;
-    void setViewtype(ViewType newViewtype);
-    ViewType getViewtype() const;
-    proxyModel();
+
 private:
     int returnValidColumnCount(int realCount) const;
-
-    ViewType viewtype;
 };
 
 #endif // PROXYMODEL_H
